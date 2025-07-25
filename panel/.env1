@@ -1,0 +1,5 @@
+DATABASE_URL="mysql://rasa:rasa123@localhost:3306/rasa"
+SESSION_SECRET="supersecret_session_key_change_me"
+PORT=8090
+SUPER_EMAIL="owner@saas.com"
+SUPER_PASSWORD="super123"

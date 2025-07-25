@@ -1,0 +1,9 @@
+version: "3.1"
+stories:
+  - story: flujo menú y selección
+    steps:
+      - intent: mostrar_menu
+      - action: action_show_menu
+      - action: utter_ask_numero_opcion
+      - intent: seleccionar_opcion
+      - action: action_respond_menu_option

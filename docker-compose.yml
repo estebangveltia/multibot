@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rasa
+      MYSQL_USER: rasa
+      MYSQL_PASSWORD: rasa123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql_data:/var/lib/mysql
+
+  rasa:
+    build:
+      context: ./rasa
+      dockerfile: Dockerfile
+    command: >
+      bash -c "rasa train && rasa run --enable-api --debug --cors "*""
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./rasa:/app
+      - ./logs:/logs
+    depends_on:
+      - mysql
+      - action-server
+    environment:
+      - PYTHONPATH=/app
+
+  action-server:
+    build:
+      context: ./action-server
+      dockerfile: Dockerfile
+    ports:
+      - "5055:5055"
+    volumes:
+      - ./rasa/actions:/app/actions
+      - ./logs:/logs
+    depends_on:
+      - mysql
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rasa
+
+  panel:
+    build: ./panel
+    environment:
+      DATABASE_URL: "mysql://rasa:rasa123@mysql:3306/rasa"
+      SESSION_SECRET: "supersecret_session_key_change_me"
+      PORT: "8090"
+      SUPER_EMAIL: "owner@saas.com"
+      SUPER_PASSWORD: "super123"
+    ports:
+      - "8090:8090"
+    depends_on:
+      - mysql
+
+  bot-ui:
+    build: ./bot-ui
+    environment:
+      PORT: "8084"
+      GATEWAY_URL: "http://gateway:8000"
+    ports:
+      - "8084:8084"
+    depends_on:
+      - gateway
+
+volumes:
+  mysql_data:

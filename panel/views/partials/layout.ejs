@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Chatbot SaaS</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <span class="brand">Chatbot SaaS</span>
+      <% if (currentUser) { %>
+        <% if (currentUser.role === 'SUPER_ADMIN') { %>
+          <a href="/super/dashboard">Dashboard</a>
+          <a href="/super/tenants">Tenants</a>
+        <% } else { %>
+          <a href="/app/dashboard">Dashboard</a>
+          <a href="/app/menus">Menús</a>
+        <% } %>
+        <a href="/logout" style="float:right;">Logout (<%= currentUser.email %>)</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <div class="container">
+    <% if (flash && flash.error) { %>
+      <% flash.error.forEach(err => { %>
+        <div class="flash error"><%= err %></div>
+      <% }) %>
+    <% } %>
+    <% if (flash && flash.success) { %>
+      <% flash.success.forEach(msg => { %>
+        <div class="flash success"><%= msg %></div>
+      <% }) %>
+    <% } %>
+
+    <%- body %>
+  </div>
+</body>
+</html>
