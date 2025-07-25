@@ -36,7 +36,8 @@
           <select id="tenant"></select>
         </label>
         <label>Usuario
-          <select id="sender" disabled></select>
+          <input id="sender" list="senderList" autocomplete="off" />
+          <datalist id="senderList"></datalist>
         </label>
         <button id="saveCfg">Guardar</button>
       </div>
@@ -60,6 +61,7 @@
     const input = document.getElementById('message');
     const tenantInput = document.getElementById('tenant');
     const senderInput = document.getElementById('sender');
+    const senderList = document.getElementById('senderList');
     const saveCfgBtn = document.getElementById('saveCfg');
 
     const state = {
@@ -93,20 +95,16 @@
     }
 
     async function loadUsers(slug) {
-      senderInput.innerHTML = '';
-      senderInput.disabled = true;
+      senderList.innerHTML = '';
       if (!slug) return;
       try {
         const res = await fetch('/api/users?tenant=' + encodeURIComponent(slug));
         const arr = await res.json();
-        senderInput.innerHTML = '<option value="">Selecciona...</option>';
         arr.forEach(u => {
           const opt = document.createElement('option');
           opt.value = u;
-          opt.textContent = u;
-          senderInput.appendChild(opt);
+          senderList.appendChild(opt);
         });
-        senderInput.disabled = false;
         if (state.sender) senderInput.value = state.sender;
       } catch (err) {
         console.error(err);
@@ -119,7 +117,12 @@
       localStorage.setItem('tenant', state.tenant);
       localStorage.removeItem('sender');
       senderInput.value = '';
+      senderList.innerHTML = '';
       loadUsers(state.tenant);
+    });
+
+    senderInput.addEventListener('input', () => {
+      state.sender = senderInput.value;
     });
 
     function addMsg(author, text) {
@@ -148,7 +151,7 @@
       e.preventDefault();
       const text = input.value.trim();
       if (!text) return;
-      if (!tenantInput.value || !senderInput.value) {
+      if (!tenantInput.value || !state.sender) {
         addMsg('sistema', 'Debes configurar tenant y usuario primero.');
         return;
       }
@@ -162,7 +165,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             tenant: tenantInput.value,
-            sender: senderInput.value,
+            sender: state.sender,
             message: text
           })
         });
