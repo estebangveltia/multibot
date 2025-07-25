@@ -18,9 +18,7 @@
           <a href="/super/users">Usuarios</a>
         <% } else { %>
           <a href="/app/dashboard">Dashboard</a>
-          <% if (currentUser.role !== 'VIEWER') { %>
-            <a href="/app/menus">Menús</a>
-          <% } %>
+          <a href="/app/menus">Menús</a>
         <% } %>
         <a href="/logout" style="float:right;">Logout (<%= currentUser.email %>)</a>
       <% } %>
