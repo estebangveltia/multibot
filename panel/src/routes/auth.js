@@ -11,20 +11,20 @@ router.get("/login", (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("Email:", email);
+  console.log("Login attempt received");
   const user = await prisma.users.findUnique({ where: { email } });
-  console.log("Usuario encontrado:", user);
+  if (user) console.log("User record found");
   if (!user) {
     req.flash("error", "Credenciales inválidas");
     return res.redirect("/login");
   }
-  console.log("Comparando:", password, user.password);
   const ok = await bcrypt.compare(password, user.password);
-   console.log("Resultado bcrypt:", ok);
+  console.log("Password verification result:", ok);
   if (!ok) {
     req.flash("error", "Credenciales inválidas");
     return res.redirect("/login");
   }
+  console.log(`User ${user.id} authenticated successfully`);
   req.session.userId = user.id;
   if (user.role === "SUPER_ADMIN") return res.redirect("/super/dashboard");
   return res.redirect("/app/dashboard");
