@@ -32,7 +32,8 @@ El panel agrega métricas diariamente a `metricsdaily` con node-cron.
 ## Bot UI
 
 - URL: http://localhost:8084
-- Configura un tenant (ej `empresa1`) y un user (ej `user1`) y envía `menu`.
+- Elige un tenant y un usuario desde los desplegables y guarda la configuración. Luego envía `menu`.
+- El servicio `bot-ui` usa la variable `DATABASE_URL` para conectarse a MySQL (por defecto `mysql://rasa:rasa123@mysql:3306/rasa`).
 
 ## Gateway
 
