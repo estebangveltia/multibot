@@ -9,7 +9,7 @@ async function main() {
   const { SUPER_EMAIL, SUPER_PASSWORD } = process.env;
   const superHash = await bcrypt.hash(SUPER_PASSWORD, 10);
 
-  await prisma.user.upsert({
+  await prisma.users.upsert({
     where: { email: SUPER_EMAIL },
     create: {
       email: SUPER_EMAIL,
@@ -27,7 +27,7 @@ async function main() {
   });
 
   const adminHash = await bcrypt.hash("admin123", 10);
-  await prisma.user.upsert({
+  await prisma.users.upsert({
     where: { email: "admin@empresa1.com" },
     create: {
       email: "admin@empresa1.com",
