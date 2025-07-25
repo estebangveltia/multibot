@@ -1,0 +1,30 @@
+<h1>Historial <%= tenant ? ('- ' + tenant.name) : '' %></h1>
+
+<form method="GET" class="filters">
+  <label>Desde <input type="date" name="from" value="<%= from %>"/></label>
+  <label>Hasta <input type="date" name="to" value="<%= to %>"/></label>
+  <button class="btn" type="submit">Aplicar</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Usuario</th>
+      <th>Mensaje</th>
+      <th>Intent</th>
+      <th>Fallback</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% interactions.forEach(i => { %>
+      <tr>
+        <td><%= i.timestamp.toISOString().slice(0,19).replace('T',' ') %></td>
+        <td><%= i.username %></td>
+        <td><%= i.message %></td>
+        <td><%= i.intent || '' %></td>
+        <td><%= i.isFallback ? 'Sí' : '' %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

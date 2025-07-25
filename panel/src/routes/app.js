@@ -76,6 +76,36 @@ router.get("/menus", ensureRoles(["TENANT_ADMIN", "SUPER_ADMIN"]), async (req, r
   res.render("app/menus", { title: "Menús", tenant, menus });
 });
 
+router.get("/history", async (req, res) => {
+  const user = req.user;
+  const tenant = user.tenantId ? await prisma.tenants.findUnique({ where: { id: user.tenantId } }) : null;
+  const slug = tenant ? tenant.slug : null;
+  const { from, to } = parseRange(req);
+
+  const where = slug
+    ? {
+        tenantSlug: slug,
+        timestamp: { gte: new Date(`${from}T00:00:00`), lte: new Date(`${to}T23:59:59`) },
+      }
+    : {
+        timestamp: { gte: new Date(`${from}T00:00:00`), lte: new Date(`${to}T23:59:59`) },
+      };
+
+  const interactions = await prisma.interactions.findMany({
+    where,
+    orderBy: { timestamp: "desc" },
+    take: 100,
+  });
+
+  res.render("app/history", {
+    title: "Historial",
+    interactions,
+    from,
+    to,
+    tenant,
+  });
+});
+
 router.get("/menus/new", ensureRoles(["TENANT_ADMIN", "SUPER_ADMIN"]), async (req, res) => {
   const user = req.user;
   const tenant = user.tenantId ? await prisma.tenants.findUnique({ where: { id: user.tenantId } }) : null;
