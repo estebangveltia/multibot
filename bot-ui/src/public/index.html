@@ -33,10 +33,10 @@
       <h1>Chatbot Multi‑Tenant</h1>
       <div class="config">
         <label>Tenant
-          <input id="tenant" placeholder="empresa1" />
+          <select id="tenant"></select>
         </label>
         <label>Usuario
-          <input id="sender" placeholder="user1" />
+          <select id="sender" disabled></select>
         </label>
         <button id="saveCfg">Guardar</button>
       </div>
@@ -67,8 +67,60 @@
       sender: localStorage.getItem('sender') || ''
     };
 
+    loadTenants();
+
     tenantInput.value = state.tenant;
     senderInput.value = state.sender;
+
+    async function loadTenants() {
+      try {
+        const res = await fetch('/api/tenants');
+        const arr = await res.json();
+        tenantInput.innerHTML = '<option value="">Selecciona...</option>';
+        arr.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.slug;
+          opt.textContent = t.name + ' (' + t.slug + ')';
+          tenantInput.appendChild(opt);
+        });
+        if (state.tenant) {
+          tenantInput.value = state.tenant;
+          await loadUsers(state.tenant);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadUsers(slug) {
+      senderInput.innerHTML = '';
+      senderInput.disabled = true;
+      if (!slug) return;
+      try {
+        const res = await fetch('/api/users?tenant=' + encodeURIComponent(slug));
+        const arr = await res.json();
+        senderInput.innerHTML = '<option value="">Selecciona...</option>';
+        arr.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u;
+          opt.textContent = u;
+          senderInput.appendChild(opt);
+        });
+        senderInput.disabled = false;
+        if (state.sender) senderInput.value = state.sender;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    tenantInput.addEventListener('change', () => {
+      state.tenant = tenantInput.value;
+      state.sender = '';
+      localStorage.setItem('tenant', state.tenant);
+      localStorage.removeItem('sender');
+      senderInput.value = '';
+      loadUsers(state.tenant);
+    });
 
     function addMsg(author, text) {
       const div = document.createElement('div');
@@ -85,8 +137,8 @@
     }
 
     saveCfgBtn.addEventListener('click', () => {
-      state.tenant = tenantInput.value.trim();
-      state.sender = senderInput.value.trim();
+      state.tenant = tenantInput.value;
+      state.sender = senderInput.value;
       localStorage.setItem('tenant', state.tenant);
       localStorage.setItem('sender', state.sender);
       addMsg('sistema', 'Config guardada: tenant=' + state.tenant + ', sender=' + state.sender);
@@ -109,8 +161,8 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            tenant: tenantInput.value.trim(),
-            sender: senderInput.value.trim(),
+            tenant: tenantInput.value,
+            sender: senderInput.value,
             message: text
           })
         });
