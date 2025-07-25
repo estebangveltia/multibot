@@ -23,6 +23,9 @@
       <td><%= t.bots.length %></td>
       <td>
         <a class="btn" href="/super/tenants/<%= t.id %>/dashboard">Dashboard</a>
+        <form method="POST" action="/super/tenants/<%= t.id %>/train" style="display:inline;">
+          <button class="btn" type="submit">Entrenar</button>
+        </form>
       </td>
     </tr>
   <% }) %>
