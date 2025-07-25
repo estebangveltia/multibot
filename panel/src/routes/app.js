@@ -68,7 +68,7 @@ router.get("/menus", ensureRoles(["TENANT_ADMIN", "SUPER_ADMIN"]), async (req, r
   const tenant = user.tenantId ? await prisma.tenants.findUnique({ where: { id: user.tenantId } }) : null;
   if (!tenant && user.role !== "SUPER_ADMIN") return res.status(403).send("Forbidden");
 
-  const menus = await prisma.menu.findMany({
+  const menus = await prisma.menus.findMany({
     where: tenant ? { tenantId: tenant.id } : undefined,
     orderBy: { opcion_num: "asc" },
   });
@@ -91,7 +91,7 @@ router.post("/menus", ensureRoles(["TENANT_ADMIN", "SUPER_ADMIN"]), async (req, 
 
   const { opcion_num, label, response } = req.body;
 
-  await prisma.menu.create({
+  await prisma.menus.create({
     data: {
       tenantId: tenant.id,
       opcion_num: parseInt(opcion_num, 10),
