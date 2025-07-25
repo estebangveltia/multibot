@@ -1,6 +1,7 @@
-FROM python:3.10-slim
+FROM node:18-slim
 WORKDIR /app
-COPY app.py .
-RUN pip install flask requests
+COPY package.json ./
+RUN npm install --production
+COPY app.js ./
 EXPOSE 8000
-CMD ["python", "app.py"]
+CMD ["node", "app.js"]
