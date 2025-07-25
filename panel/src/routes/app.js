@@ -63,7 +63,7 @@ router.get("/dashboard", async (req, res) => {
   });
 });
 
-router.get("/menus", ensureRoles(["TENANT_ADMIN", "SUPER_ADMIN"]), async (req, res) => {
+router.get("/menus", async (req, res) => {
   const user = req.user;
   const tenant = user.tenantId ? await prisma.tenants.findUnique({ where: { id: user.tenantId } }) : null;
   if (!tenant && user.role !== "SUPER_ADMIN") return res.status(403).send("Forbidden");
