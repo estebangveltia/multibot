@@ -1,4 +1,7 @@
 <h1>Dashboard Tenant: <%= tenant.name %></h1>
+<form method="POST" action="/super/tenants/<%= tenant.id %>/train" style="margin-bottom:10px;">
+  <button class="btn" type="submit">Entrenar bot</button>
+</form>
 
 <form method="GET" class="filters">
   <label>Desde <input type="date" name="from" value="<%= from %>"/></label>

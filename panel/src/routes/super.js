@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { PrismaClient } from "@prisma/client";
 import { ensureRoles } from "../middlewares/auth.js";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -120,6 +122,47 @@ router.get("/tenants/:id/dashboard", async (req, res) => {
     kpis: { ...kpis, avg_per_conv },
     topMenu
   });
+});
+
+router.post("/tenants/:id/train", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const tenant = await prisma.tenants.findUnique({ where: { id } });
+  if (!tenant) return res.status(404).send("Tenant not found");
+
+  const rasaDir = path.resolve(process.cwd(), "rasa");
+  let dataDir = path.join(rasaDir, "data", tenant.slug);
+  if (!fs.existsSync(dataDir)) {
+    dataDir = path.join(rasaDir, "data");
+  }
+
+  const form = new FormData();
+  const appendIfExists = (key, filePath) => {
+    if (fs.existsSync(filePath)) {
+      form.append(key, fs.createReadStream(filePath));
+    }
+  };
+
+  appendIfExists("config", path.join(rasaDir, "config.yml"));
+  appendIfExists("domain", path.join(rasaDir, "domain.yml"));
+  appendIfExists("nlu", path.join(dataDir, "nlu.yml"));
+  appendIfExists("stories", path.join(dataDir, "stories.yml"));
+  appendIfExists("rules", path.join(dataDir, "rules.yml"));
+
+  try {
+    const response = await fetch(
+      "http://rasa:5005/model/train?save_to_default_model_directory=true",
+      { method: "POST", body: form }
+    );
+    if (response.ok) {
+      req.flash("success", "Entrenamiento iniciado");
+    } else {
+      req.flash("error", `Error al entrenar: ${response.statusText}`);
+    }
+  } catch (err) {
+    console.error("Training error", err);
+    req.flash("error", "Error al entrenar");
+  }
+  res.redirect(`/super/tenants/${tenant.id}/dashboard`);
 });
 
 // Users management
