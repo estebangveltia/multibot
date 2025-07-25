@@ -36,7 +36,8 @@
           <select id="tenant"></select>
         </label>
         <label>Usuario
-          <select id="sender" disabled></select>
+          <input id="sender" list="senderList" />
+          <datalist id="senderList"></datalist>
         </label>
         <button id="saveCfg">Guardar</button>
       </div>
@@ -60,6 +61,7 @@
     const input = document.getElementById('message');
     const tenantInput = document.getElementById('tenant');
     const senderInput = document.getElementById('sender');
+    const senderList = document.getElementById('senderList');
     const saveCfgBtn = document.getElementById('saveCfg');
 
     const state = {
@@ -93,20 +95,16 @@
     }
 
     async function loadUsers(slug) {
-      senderInput.innerHTML = '';
-      senderInput.disabled = true;
+      senderList.innerHTML = '';
       if (!slug) return;
       try {
         const res = await fetch('/api/users?tenant=' + encodeURIComponent(slug));
         const arr = await res.json();
-        senderInput.innerHTML = '<option value="">Selecciona...</option>';
         arr.forEach(u => {
           const opt = document.createElement('option');
           opt.value = u;
-          opt.textContent = u;
-          senderInput.appendChild(opt);
+          senderList.appendChild(opt);
         });
-        senderInput.disabled = false;
         if (state.sender) senderInput.value = state.sender;
       } catch (err) {
         console.error(err);
