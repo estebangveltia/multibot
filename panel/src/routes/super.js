@@ -2,6 +2,7 @@ import { Router } from "express";
 import dayjs from "dayjs";
 import { PrismaClient } from "@prisma/client";
 import { ensureRoles } from "../middlewares/auth.js";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -119,6 +120,42 @@ router.get("/tenants/:id/dashboard", async (req, res) => {
     kpis: { ...kpis, avg_per_conv },
     topMenu
   });
+});
+
+// Users management
+
+router.get("/users", async (_req, res) => {
+  const users = await prisma.users.findMany({
+    include: { tenants: true },
+    orderBy: { id: "asc" },
+  });
+  res.render("super/users", { title: "Usuarios", users });
+});
+
+router.get("/users/new", async (_req, res) => {
+  const tenants = await prisma.tenants.findMany({ orderBy: { name: "asc" } });
+  res.render("super/user_new", { title: "Nuevo Usuario", tenants });
+});
+
+router.post("/users", async (req, res) => {
+  const { email, name, password, role, tenantId } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  await prisma.users.create({
+    data: {
+      email,
+      name,
+      password: hashed,
+      role,
+      tenantId: tenantId ? parseInt(tenantId, 10) : null,
+    },
+  });
+  res.redirect("/super/users");
+});
+
+router.delete("/users/:id", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  await prisma.users.delete({ where: { id } });
+  res.redirect("/super/users");
 });
 
 export default router;
