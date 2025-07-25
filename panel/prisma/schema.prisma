@@ -32,6 +32,23 @@ model interactions {
   isFallback Boolean?  @default(false)
 }
 
+model conversations {
+  id              Int                  @id @default(autoincrement())
+  tenantSlug      String               @db.VarChar(100)
+  username        String               @db.VarChar(100)
+  createdAt       DateTime             @default(now()) @db.DateTime(0)
+  status          conversations_status @default(PENDING)
+  requiresFollowup Boolean?            @default(false)
+  resolvedByHuman Boolean?             @default(false)
+  notes           String?              @db.Text
+}
+
+enum conversations_status {
+  PENDING
+  IN_REVIEW
+  CLOSED
+}
+
 model menus {
   id         Int     @id @default(autoincrement())
   tenantId   Int

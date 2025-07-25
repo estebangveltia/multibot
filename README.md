@@ -24,6 +24,7 @@ Una vez que Rasa entrenó, estará en `:5005`. El panel en `:8090`. El bot-UI en
 - SUPER_ADMIN: `owner@saas.com / super123`
 - TENANT_ADMIN (ejemplo): `admin@empresa1.com / admin123`
 - Los SUPER_ADMIN pueden administrar usuarios y asignar roles a tenants en `/super/users`. Accede a esa ruta para crear y editar usuarios.
+- Los usuarios con rol **AGENT** pueden acceder a `/agent/conversations` para revisar conversaciones y a `/agent/menus` para ver las opciones del bot.
 
 ### Cron de métricas
 El panel agrega métricas diariamente a `metricsdaily` con node-cron.

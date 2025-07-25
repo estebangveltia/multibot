@@ -1,0 +1,36 @@
+<h1>Conversación <%= conversation.id %></h1>
+<p><strong>Usuario:</strong> <%= conversation.username %></p>
+<p><strong>Creada:</strong> <%= conversation.createdAt.toISOString().substring(0,19) %></p>
+
+<table>
+  <thead>
+    <tr><th>Hora</th><th>Mensaje</th><th>Respuesta</th></tr>
+  </thead>
+  <tbody>
+    <% messages.forEach(m => { %>
+      <tr>
+        <td><%= m.timestamp.toISOString().substring(0,19) %></td>
+        <td><%= m.message %></td>
+        <td><%= m.response %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<form method="POST" action="/agent/conversations/<%= conversation.id %>" style="max-width:600px;">
+  <div class="form-group">
+    <label>Notas internas</label>
+    <textarea name="notes"><%= conversation.notes || '' %></textarea>
+  </div>
+  <div class="form-group">
+    <label>Estado</label>
+    <select name="status">
+      <option value="PENDING" <%= conversation.status==='PENDING'?'selected':'' %>>Pendiente</option>
+      <option value="IN_REVIEW" <%= conversation.status==='IN_REVIEW'?'selected':'' %>>En revisión</option>
+      <option value="CLOSED" <%= conversation.status==='CLOSED'?'selected':'' %>>Cerrada</option>
+    </select>
+  </div>
+  <label><input type="checkbox" name="requiresFollowup" value="1" <%= conversation.requiresFollowup ? 'checked' : '' %>> Requiere seguimiento</label>
+  <label><input type="checkbox" name="resolvedByHuman" value="1" <%= conversation.resolvedByHuman ? 'checked' : '' %>> Resuelto por humano</label>
+  <button class="btn" type="submit">Guardar</button>
+</form>

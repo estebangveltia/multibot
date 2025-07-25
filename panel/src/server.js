@@ -11,6 +11,7 @@ import { PrismaClient } from "@prisma/client";
 import authRoutes from "./routes/auth.js";
 import superRoutes from "./routes/super.js";
 import appRoutes from "./routes/app.js";
+import agentRoutes from "./routes/agent.js";
 import { injectUser, ensureAuthenticated } from "./middlewares/auth.js";
 import { registerDailyCron } from "./cron/index.js";
 
@@ -51,6 +52,7 @@ app.get("/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/", authRoutes);
 app.use("/super", ensureAuthenticated, superRoutes);
 app.use("/app", ensureAuthenticated, appRoutes);
+app.use("/agent", ensureAuthenticated, agentRoutes);
 
 app.get("/", (req, res) => {
   if (!req.user) return res.redirect("/login");
