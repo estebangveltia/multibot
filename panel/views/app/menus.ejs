@@ -1,6 +1,8 @@
 <h1>Menús <%= tenant ? ('- ' + tenant.name) : '' %></h1>
 
-<a href="/app/menus/new" class="btn">+ Nueva opción</a>
+<% if (currentUser.role !== 'VIEWER') { %>
+  <a href="/app/menus/new" class="btn">+ Nueva opción</a>
+<% } %>
 
 <table>
   <thead>
