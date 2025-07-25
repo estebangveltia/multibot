@@ -1,6 +1,8 @@
 <h1>Menús <%= tenant ? ('- ' + tenant.name) : '' %></h1>
 
-<% if (currentUser.role !== 'VIEWER') { %>
+<% if (currentUser.role === 'VIEWER') { %>
+  <span class="btn disabled" title="Solo lectura">+ Nueva opción</span>
+<% } else { %>
   <a href="/app/menus/new" class="btn">+ Nueva opción</a>
 <% } %>
 
