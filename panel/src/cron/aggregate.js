@@ -9,7 +9,7 @@ export async function aggregateDay(dateStr) {
   const tenants = await prisma.tenants.findMany({ select: { slug: true } });
 
   for (const t of tenants) {
-    const interactions = await prisma.interaction.findMany({
+    const interactions = await prisma.interactions.findMany({
       where: {
         tenantSlug: t.slug,
         timestamp: { gte: dayStart, lte: dayEnd },
@@ -26,7 +26,7 @@ export async function aggregateDay(dateStr) {
     ).length;
     const avgPerConv = conversations > 0 ? messages / conversations : 0;
 
-    await prisma.metricsDaily.upsert({
+    await prisma.metricsdaily.upsert({
       where: { day_tenantSlug_botId: { day: new Date(dateStr), tenantSlug: t.slug, botId: null } },
       create: {
         day: new Date(dateStr),
