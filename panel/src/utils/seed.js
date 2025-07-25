@@ -20,13 +20,19 @@ async function main() {
     update: {}
   });
 
-  const tenant = await prisma.tenants.upsert({
+  const tenant1 = await prisma.tenants.upsert({
     where: { slug: "empresa1" },
     create: { name: "Empresa 1", slug: "empresa1" },
     update: {}
   });
+  const tenant2 = await prisma.tenants.upsert({
+    where: { slug: "empresa2" },
+    create: { name: "Empresa 2", slug: "empresa2" },
+    update: {}
+  });
 
   const adminHash = await bcrypt.hash("admin123", 10);
+
   await prisma.users.upsert({
     where: { email: "admin@empresa1.com" },
     create: {
@@ -34,10 +40,28 @@ async function main() {
       password: adminHash,
       name: "Admin Empresa1",
       role: "TENANT_ADMIN",
-      tenantId: tenant.id
+      tenantId: tenant1.id
     },
     update: {}
   });
+
+  await prisma.users.upsert({
+    where: { email: "admin@empresa2.com" },
+    create: {
+      email: "admin@empresa2.com",
+      password: adminHash,
+      name: "Admin Empresa2",
+      role: "TENANT_ADMIN",
+      tenantId: tenant2.id
+    },
+    update: {}
+  });
+
+  for (const tenant of [tenant1, tenant2]) {
+    for (let i = 1; i <= 10; i++) {
+      await prisma.$executeRaw`INSERT INTO menus (tenantId, opcion_num, label, response) VALUES (${tenant.id}, ${i}, ${`Opcion ${i}`}, ${`Respuesta ${i}`}) ON DUPLICATE KEY UPDATE label=VALUES(label), response=VALUES(response)`;
+    }
+  }
 
   console.log("Seed completed");
 }

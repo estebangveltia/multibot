@@ -77,14 +77,43 @@ CREATE TABLE IF NOT EXISTS metricsdaily (
   INDEX (tenantSlug, day)
 );
 
-INSERT INTO tenants (name, slug) VALUES ('Empresa 1', 'empresa1') ON DUPLICATE KEY UPDATE name=VALUES(name);
-INSERT INTO tenants (name, slug) VALUES ('Empresa 2', 'empresa2') ON DUPLICATE KEY UPDATE name=VALUES(name);
+INSERT INTO tenants (name, slug) VALUES
+  ('Empresa 1', 'empresa1'),
+  ('Empresa 2', 'empresa2')
+ON DUPLICATE KEY UPDATE name=VALUES(name);
 
--- Dummy menus
+-- Seed admin users for each tenant
+INSERT INTO users (email, password, name, role, tenantId)
+VALUES
+  ('admin@empresa1.com', '$2b$12$LZQ5EyTRro12qQvU2PRcoeQcJMAVswekYSiu70ONo5MiSheATMRcK',
+   'Admin Empresa1', 'TENANT_ADMIN', 1),
+  ('admin@empresa2.com', '$2b$12$LZQ5EyTRro12qQvU2PRcoeQcJMAVswekYSiu70ONo5MiSheATMRcK',
+   'Admin Empresa2', 'TENANT_ADMIN', 2)
+ON DUPLICATE KEY UPDATE name=VALUES(name), password=VALUES(password);
+
+-- Seed menu options for both tenants
+-- Option numbers 1-10 with simple labels/responses
 INSERT INTO menus (tenantId, opcion_num, label, response)
-SELECT 1, 1, 'Consultar saldo', 'Su saldo es $1.000'
-WHERE NOT EXISTS (SELECT 1 FROM menus WHERE tenantId=1 AND opcion_num=1);
-INSERT INTO menus (tenantId, opcion_num, label, response)
-SELECT 1, 2, 'Ver movimientos', 'No hay movimientos recientes'
-WHERE NOT EXISTS (SELECT 1 FROM menus WHERE tenantId=1 AND opcion_num=2);
+VALUES
+  (1,1,'Opcion 1','Respuesta 1'),
+  (1,2,'Opcion 2','Respuesta 2'),
+  (1,3,'Opcion 3','Respuesta 3'),
+  (1,4,'Opcion 4','Respuesta 4'),
+  (1,5,'Opcion 5','Respuesta 5'),
+  (1,6,'Opcion 6','Respuesta 6'),
+  (1,7,'Opcion 7','Respuesta 7'),
+  (1,8,'Opcion 8','Respuesta 8'),
+  (1,9,'Opcion 9','Respuesta 9'),
+  (1,10,'Opcion 10','Respuesta 10'),
+  (2,1,'Opcion 1','Respuesta 1'),
+  (2,2,'Opcion 2','Respuesta 2'),
+  (2,3,'Opcion 3','Respuesta 3'),
+  (2,4,'Opcion 4','Respuesta 4'),
+  (2,5,'Opcion 5','Respuesta 5'),
+  (2,6,'Opcion 6','Respuesta 6'),
+  (2,7,'Opcion 7','Respuesta 7'),
+  (2,8,'Opcion 8','Respuesta 8'),
+  (2,9,'Opcion 9','Respuesta 9'),
+  (2,10,'Opcion 10','Respuesta 10')
+ON DUPLICATE KEY UPDATE label=VALUES(label), response=VALUES(response);
 
