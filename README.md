@@ -11,8 +11,7 @@
 
 ### Supabase
 Este proyecto utiliza una base de datos gestionada en Supabase. Crea el proyecto en
-[supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la
-variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios.
+[supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios. Tanto Rasa como el servidor de acciones usarán esa URL para conectarse a la base de datos PostgreSQL.
 
 ```bash
 cd panel

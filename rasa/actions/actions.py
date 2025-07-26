@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-import pymysql
+import psycopg2
+import psycopg2.extras
 import logging
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
@@ -16,22 +17,31 @@ handler.setFormatter(formatter)
 logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 
-MYSQL_HOST = "mysql"
-MYSQL_USER = "rasa"
-MYSQL_PASSWORD = "rasa123"
-MYSQL_DB = "rasa"
+PG_URL = os.getenv("SUPABASE_DB_URL", "")
+PG_HOST = os.getenv("PG_HOST")
+PG_USER = os.getenv("PG_USER")
+PG_PASSWORD = os.getenv("PG_PASSWORD")
+PG_DB = os.getenv("PG_DB")
+PG_PORT = os.getenv("PG_PORT")
+
+
+def get_connection():
+    if PG_URL:
+        return psycopg2.connect(PG_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+    return psycopg2.connect(
+        host=PG_HOST or "localhost",
+        user=PG_USER or "rasa",
+        password=PG_PASSWORD or "",
+        dbname=PG_DB or "rasa",
+        port=int(PG_PORT or 5432),
+        cursor_factory=psycopg2.extras.RealDictCursor,
+    )
 
 
 def log_interaction(tenant: str, username: str, menu_option: str, message: str, response: str) -> None:
     logger.info(f"{tenant} | {username} | {menu_option} | {message} | {response}")
     try:
-        connection = pymysql.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            db=MYSQL_DB,
-            cursorclass=pymysql.cursors.DictCursor,
-        )
+        connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute(
                 """
@@ -62,13 +72,7 @@ class ActionShowMenu(Action):
             tenant, username = "default", sender_id
 
         try:
-            connection = pymysql.connect(
-                host=MYSQL_HOST,
-                user=MYSQL_USER,
-                password=MYSQL_PASSWORD,
-                db=MYSQL_DB,
-                cursorclass=pymysql.cursors.DictCursor,
-            )
+            connection = get_connection()
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
@@ -124,13 +128,7 @@ class ActionRespondMenuOption(Action):
         response_text = ""
         if menu_num:
             try:
-                connection = pymysql.connect(
-                    host=MYSQL_HOST,
-                    user=MYSQL_USER,
-                    password=MYSQL_PASSWORD,
-                    db=MYSQL_DB,
-                    cursorclass=pymysql.cursors.DictCursor,
-                )
+                connection = get_connection()
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
