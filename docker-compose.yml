@@ -50,8 +50,8 @@ services:
     ports:
       - "8090:8090"
 
-  bot-ui:
-    build: ./bot-ui
+  frontend:
+    build: ./frontend
     environment:
       PORT: "8084"
       GATEWAY_URL: "http://gateway:8000"

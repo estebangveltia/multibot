@@ -82,10 +82,19 @@ Una vez que Rasa entrenó, estará en `:5005`. El panel en `:8090`. El bot-UI en
 ### Cron de métricas
 El panel agrega métricas diariamente a `metricsdaily` con node-cron.
 
-## Bot UI
+## Frontend
 
 - URL: http://localhost:8084
-- Configura un tenant (ej `empresa1`) y un user (ej `user1`) y envía `menu`.
+- Aplicación Next.js con Tailwind y Shadcn UI. Configura un tenant (ej `empresa1`) y un user (ej `user1`) y envía `menu`.
+
+### Construir manualmente
+
+```bash
+cd frontend
+npm install
+npm run build
+npm start
+```
 
 ## Gateway
 
