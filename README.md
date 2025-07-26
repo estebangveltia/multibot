@@ -1,13 +1,18 @@
-# Full Chatbot.com-like MVP (Rasa + Gateway + MySQL + Panel + Bot UI)
+# Full Chatbot.com-like MVP (Rasa + Gateway + Supabase + Panel + Bot UI)
 
 ## Servicios
 
-- **mysql**: base de datos
-- **rasa**: motor NLU/Core con tracker_store en MySQL
+- **supabase**: base de datos gestionada externamente
+- **rasa**: motor NLU/Core con tracker_store en Supabase
 - **action-server**: acciones custom (multi-tenant) + logging a archivo y DB
 - **gateway**: Flask que reescribe `sender -> tenant__user`
 - **panel**: Express + EJS con roles (SUPER_ADMIN, TENANT_ADMIN, ...) y dashboards
 - **bot-ui**: página simple para que los usuarios hablen con el bot
+
+### Supabase
+Este proyecto utiliza una base de datos gestionada en Supabase. Crea el proyecto en
+[supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la
+variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios.
 
 ## Levantar todo
 
