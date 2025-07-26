@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  users     User[]
+  menus     Menu[]
+  bots      Bot[]
+  metrics   MetricsDaily[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role
+  tenantId  Int?
+  tenant    Tenant?   @relation(fields: [tenantId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum Role {
+  SUPER_ADMIN
+  TENANT_ADMIN
+  ANALYST
+  AGENT
+  VIEWER
+}
+
+model Bot {
+  id        Int       @id @default(autoincrement())
+  name      String
+  tenantId  Int
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Menu {
+  id         Int      @id @default(autoincrement())
+  tenantId   Int
+  opcion_num Int
+  label      String
+  response   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, opcion_num])
+}
+
+model Interaction {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  tenantSlug  String
+  username    String
+  botId       Int?
+  menuOption  String?
+  message     String?
+  response    String?
+  intent      String?
+  isFallback  Boolean  @default(false)
+}
+
+model MetricsDaily {
+  day           DateTime
+  tenantSlug    String
+  botId         Int?
+  conversations Int
+  users         Int
+  messages      Int
+  fallbacks     Int
+  avgPerConv    Float
+
+  @@id([day, tenantSlug, botId])
+  @@index([tenantSlug, day])
+}

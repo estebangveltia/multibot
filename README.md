@@ -5,7 +5,7 @@
 - **mysql**: base de datos
 - **rasa**: motor NLU/Core con tracker_store en MySQL
 - **action-server**: acciones custom (multi-tenant) + logging a archivo y DB
-- **gateway**: Node.js (Express) que reescribe `sender -> tenant__user`
+- **gateway**: Flask que reescribe `sender -> tenant__user`
 - **panel**: Express + EJS con roles (SUPER_ADMIN, TENANT_ADMIN, ...) y dashboards
 - **bot-ui**: página simple para que los usuarios hablen con el bot
 
@@ -23,8 +23,6 @@ Una vez que Rasa entrenó, estará en `:5005`. El panel en `:8090`. El bot-UI en
 - URL: http://localhost:8090
 - SUPER_ADMIN: `owner@saas.com / super123`
 - TENANT_ADMIN (ejemplo): `admin@empresa1.com / admin123`
-- Los SUPER_ADMIN pueden administrar usuarios y asignar roles a tenants en `/super/users`. Accede a esa ruta para crear y editar usuarios.
-- Los usuarios con rol **AGENT** pueden acceder a `/agent/conversations` para revisar conversaciones y a `/agent/menus` para ver las opciones del bot.
 
 ### Cron de métricas
 El panel agrega métricas diariamente a `metricsdaily` con node-cron.
@@ -32,8 +30,7 @@ El panel agrega métricas diariamente a `metricsdaily` con node-cron.
 ## Bot UI
 
 - URL: http://localhost:8084
- - Elige un tenant y escribe o selecciona un usuario desde el campo con sugerencias, luego guarda la configuración y envía `menu`.
-- El servicio `bot-ui` usa la variable `DATABASE_URL` para conectarse a MySQL (por defecto `mysql://rasa:rasa123@mysql:3306/rasa`).
+- Configura un tenant (ej `empresa1`) y un user (ej `user1`) y envía `menu`.
 
 ## Gateway
 

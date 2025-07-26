@@ -1,0 +1,27 @@
+version: "3.1"
+
+intents:
+  - mostrar_menu
+  - seleccionar_opcion
+
+entities:
+  - numero_opcion
+
+slots:
+  numero_opcion:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+
+actions:
+  - action_show_menu
+  - action_respond_menu_option
+
+responses:
+  utter_ask_numero_opcion:
+    - text: "¿Qué opción eliges? (Escribe el número de la opción)"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

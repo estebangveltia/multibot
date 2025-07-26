@@ -1,0 +1,30 @@
+<h1>Tenants</h1>
+
+<a href="/super/tenants/new" class="btn">+ Nuevo tenant</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Slug</th>
+      <th>Usuarios</th>
+      <th>Bots</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% tenants.forEach(t => { %>
+    <tr>
+      <td><%= t.id %></td>
+      <td><%= t.name %></td>
+      <td><%= t.slug %></td>
+      <td><%= t.users.length %></td>
+      <td><%= t.bots.length %></td>
+      <td>
+        <a class="btn" href="/super/tenants/<%= t.id %>/dashboard">Dashboard</a>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
