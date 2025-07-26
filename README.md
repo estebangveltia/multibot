@@ -85,7 +85,7 @@ El panel agrega métricas diariamente a `metricsdaily` con node-cron.
 ## Frontend
 
 - URL: http://localhost:8084
-- Aplicación Next.js con Tailwind y Shadcn UI. Configura un tenant (ej `empresa1`) y un user (ej `user1`) y envía `menu`.
+- Aplicación **Next.js&nbsp;14** escrita en **TypeScript**. Usa **Tailwind CSS** y los componentes de **Shadcn UI**. Incluye un sistema de autenticación básico con roles jerárquicos almacenados en *LocalStorage* y gestionados mediante *React Context*.
 
 ### Construir manualmente
 
