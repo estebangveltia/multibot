@@ -14,6 +14,12 @@ Este proyecto utiliza una base de datos gestionada en Supabase. Crea el proyecto
 [supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la
 variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios.
 
+```bash
+cd panel
+npx prisma migrate dev
+npx prisma generate
+```
+
 ## Levantar todo
 
 ```bash
