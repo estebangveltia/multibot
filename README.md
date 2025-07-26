@@ -11,7 +11,14 @@
 
 ### Supabase
 Este proyecto utiliza una base de datos gestionada en Supabase. Crea el proyecto en
-[supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios. Tanto Rasa como el servidor de acciones usarán esa URL para conectarse a la base de datos PostgreSQL.
+
+[supabase.com](https://supabase.com), obtén la cadena de conexión y defínela en la variable de entorno `SUPABASE_DB_URL` antes de levantar los servicios. Asegúrate de que tenga el prefijo `postgresql+psycopg2://`. Tanto Rasa como el servidor de acciones usarán esa URL para conectarse a la base de datos PostgreSQL. La imagen `rasa` ya incluye el driver `psycopg2-binary` (ver `rasa/Dockerfile`).
+
+Si es la primera vez que usas Supabase, crea las tablas del tracker store ejecutando:
+
+```bash
+docker compose run --rm rasa rasa db migrate
+```
 
 ```bash
 cd panel

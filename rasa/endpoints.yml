@@ -3,6 +3,8 @@ action_endpoint:
 
 tracker_store:
   type: SQL
-  engine_url: "mysql+pymysql://rasa:rasa123@mysql:3306/rasa?charset=utf8mb4"
+  # Cadena de conexión a Supabase en formato
+  # postgresql+psycopg2://user:password@host:port/db
+  engine_url: "${SUPABASE_DB_URL}"
   pool_size: 50
   pool_recycle: 3600
