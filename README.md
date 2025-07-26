@@ -26,6 +26,44 @@ npx prisma migrate dev
 npx prisma generate
 ```
 
+### Configuración inicial con Supabase
+
+1. Crea un proyecto en [Supabase](https://supabase.com) y ve a **Project settings → Database** para obtener la *Connection string* de PostgreSQL.
+2. Define esa URL en la variable `SUPABASE_DB_URL` (o `DATABASE_URL` para Prisma). Puedes colocarla en los archivos `.env` o exportarla antes de ejecutar los contenedores.
+3. Ejecuta las migraciones y el *seed* inicial:
+   ```bash
+   docker compose run --rm rasa rasa db migrate
+   cd panel
+   npx prisma migrate dev
+   npx prisma generate
+   npm run seed
+   cd ..
+   ```
+4. Levanta los servicios sin MySQL:
+   ```bash
+   docker compose up -d
+   ```
+   Este `docker-compose.yml` no define un servicio MySQL; toda la persistencia se realiza en Supabase.
+
+5. Ejemplos de variables en archivos `.env`:
+   ```env
+   # panel/.env
+   DATABASE_URL="postgresql+psycopg2://usuario:password@db.supabase.co:5432/postgres"
+   SESSION_SECRET="supersecret_session_key_change_me"
+   PORT=8090
+   SUPER_EMAIL="owner@saas.com"
+   SUPER_PASSWORD="super123"
+   ```
+   ```env
+   # action-server/.env (opcional)
+   SUPABASE_DB_URL="postgresql+psycopg2://usuario:password@db.supabase.co:5432/postgres"
+   PG_HOST=db.supabase.co
+   PG_USER=usuario
+   PG_PASSWORD=password
+   PG_DB=postgres
+   PG_PORT=5432
+   ```
+
 ## Levantar todo
 
 ```bash
