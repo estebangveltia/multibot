@@ -1,6 +1,8 @@
 'use client';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { prisma } from '@/lib/prisma';
+import { loginWithPrisma } from '@/lib/loginWithPrisma';
 import { User } from '@/types';
 
 interface SignInPayload {
@@ -33,32 +35,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async ({ email, password }: SignInPayload) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (data?.user) {
-      const { data: userData } = await supabase
-        .from('usuarios')
-        .select('id, email, rol, tenant_id')
-        .eq('id', data.user.id)
-        .single();
-      if (userData) {
-        setUser(userData);
-        localStorage.setItem('auth', JSON.stringify(userData));
-        await supabase.from('auditoria_usuarios').insert({
-          id_usuario: userData.id,
-          id_tenant: userData.tenant_id,
-          accion: 'login'
-        });
-      }
+    const { user: loginUser, error } = await loginWithPrisma({ email, password });
+    if (loginUser) {
+      setUser(loginUser);
+      localStorage.setItem('auth', JSON.stringify(loginUser));
     }
     return { error };
   };
 
   const signOut = async () => {
     if (user) {
-      await supabase.from('auditoria_usuarios').insert({
-        id_usuario: user.id,
-        id_tenant: user.tenant_id,
-        accion: 'logout'
+      await prisma.auditoriaUsuario.create({
+        data: {
+          id_usuario: user.id,
+          id_tenant: user.tenant_id,
+          accion: 'logout'
+        }
       });
     }
     await supabase.auth.signOut();

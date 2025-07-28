@@ -4,3 +4,9 @@ export interface User {
   rol: 'superadmin' | 'admin_empresa' | 'usuario_empresa';
   tenant_id: string;
 }
+
+export interface Tenant {
+  id: string;
+  nombre: string;
+  createdAt: string;
+}
