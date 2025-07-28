@@ -1,0 +1,20 @@
+version: "3.1"
+nlu:
+  - intent: mostrar_menu
+    examples: |
+      - mostrar menú
+      - menu
+      - ver menú
+      - quiero ver las opciones
+  - intent: seleccionar_opcion
+    examples: |
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - opción 1
+      - opción 2
+      - selecciono 3
+      - elijo 4
+      - la 5
