@@ -1,0 +1,24 @@
+{
+  "name": "multibot",
+  "version": "1.0.0",
+  "description": "Este proyecto es una plataforma base **multitenant y multiusuario**, construida con tecnologías modernas como **Next.js 14**, **TypeScript**, **Tailwind CSS**, **Shadcn/ui**, **Supabase** y **Prisma**.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.12.0",
+    "@supabase/supabase-js": "^2.53.0",
+    "lucide-react": "^0.532.0",
+    "next": "^15.4.4",
+    "prisma": "^6.12.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}
