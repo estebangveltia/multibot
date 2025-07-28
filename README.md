@@ -39,11 +39,11 @@ npx prisma generate
    npm run seed
    cd ..
    ```
-4. Levanta los servicios sin MySQL:
+4. Levanta los servicios:
    ```bash
    docker compose up -d
    ```
-   Este `docker-compose.yml` no define un servicio MySQL; toda la persistencia se realiza en Supabase.
+   Toda la persistencia se realiza en Supabase; no hay contenedor MySQL.
 
 5. Ejemplos de variables en archivos `.env`:
    ```env

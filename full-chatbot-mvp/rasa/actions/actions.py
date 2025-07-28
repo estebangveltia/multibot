@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-import pymysql
+import psycopg2
+import psycopg2.extras
 import logging
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
@@ -16,22 +17,17 @@ handler.setFormatter(formatter)
 logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 
-MYSQL_HOST = "mysql"
-MYSQL_USER = "rasa"
-MYSQL_PASSWORD = "rasa123"
-MYSQL_DB = "rasa"
+
+DB_URL = os.getenv("SUPABASE_DB_URL", "").replace("+psycopg2", "")
+
+def get_connection():
+    return psycopg2.connect(DB_URL, cursor_factory=psycopg2.extras.DictCursor)
 
 
 def log_interaction(tenant: str, username: str, menu_option: str, message: str, response: str) -> None:
     logger.info(f"{tenant} | {username} | {menu_option} | {message} | {response}")
     try:
-        connection = pymysql.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            db=MYSQL_DB,
-            cursorclass=pymysql.cursors.DictCursor,
-        )
+        connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute(
                 """
@@ -62,13 +58,7 @@ class ActionShowMenu(Action):
             tenant, username = "default", sender_id
 
         try:
-            connection = pymysql.connect(
-                host=MYSQL_HOST,
-                user=MYSQL_USER,
-                password=MYSQL_PASSWORD,
-                db=MYSQL_DB,
-                cursorclass=pymysql.cursors.DictCursor,
-            )
+            connection = get_connection()
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
@@ -124,13 +114,7 @@ class ActionRespondMenuOption(Action):
         response_text = ""
         if menu_num:
             try:
-                connection = pymysql.connect(
-                    host=MYSQL_HOST,
-                    user=MYSQL_USER,
-                    password=MYSQL_PASSWORD,
-                    db=MYSQL_DB,
-                    cursorclass=pymysql.cursors.DictCursor,
-                )
+                connection = get_connection()
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
