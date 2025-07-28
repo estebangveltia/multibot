@@ -14,6 +14,15 @@ Este repositorio contiene un ejemplo mínimo para arrancar un proyecto **Next.js
 ## Uso
 
 1. Copia `.env.example` a `.env` y configura la URL y clave anónima de tu proyecto Supabase.
+
+##postgresql://postgres:d48USIPQpMDdcZpX@db.qmiywshutueyhkepalgq.supabase.co:5432/postgres
+
+db.qmiywshutueyhkepalgq.supabase.co
+
+postgres
+
+d48USIPQpMDdcZpX
+
 2. Instala las dependencias:
 
    ```bash
