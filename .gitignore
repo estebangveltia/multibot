@@ -1,2 +1,8 @@
 node_modules
 .next
+
+# Ignore environment files
+.env*
+
+# Ignore zip archives
+*.zip
