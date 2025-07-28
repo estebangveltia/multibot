@@ -114,3 +114,14 @@ curl -X POST http://localhost:5005/webhooks/rest/webhook \
 ```
 
 ¡Disfruta! 💪
+
+## TypeScript
+
+Se agregaron archivos `tsconfig.json` en los servicios `panel` y `bot-ui` para
+compilar el código con [TypeScript](https://www.typescriptlang.org/). Luego de
+instalar la dependencia `typescript`, se puede generar la salida ejecutando:
+
+```bash
+cd panel && npx tsc
+cd ../bot-ui && npx tsc
+```
