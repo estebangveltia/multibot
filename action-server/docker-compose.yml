@@ -1,0 +1,9 @@
+# Placeholder compose for Rasa action server
+version: '3'
+services:
+  action-server:
+    image: rasa/rasa-sdk:latest
+    volumes:
+      - ./:/app
+    env_file:
+      - .env.example

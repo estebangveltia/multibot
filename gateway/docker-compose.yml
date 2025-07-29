@@ -1,0 +1,8 @@
+# Placeholder compose for the gateway
+version: '3'
+services:
+  gateway:
+    image: node:18
+    command: node server.js
+    env_file:
+      - .env.example

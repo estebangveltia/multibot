@@ -1,0 +1,8 @@
+# Placeholder compose for the administration panel
+version: '3'
+services:
+  panel:
+    image: node:18
+    command: yarn dev
+    env_file:
+      - .env.example
