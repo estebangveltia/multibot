@@ -1,0 +1,46 @@
+
+version: '3.9'
+services:
+  supabase-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: supabase
+      POSTGRES_USER: supabase
+      POSTGRES_DB: supabase
+    volumes:
+      - supabase-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  rasa:
+    image: rasa/rasa:3.6.10-full
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./services/rasa:/app
+    command: >
+      rasa run --enable-api --cors "*"
+
+  action-server:
+    build: ./services/action-server
+    ports:
+      - "5055:5055"
+
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "8000:8000"
+
+  panel:
+    build: ./services/panel
+    ports:
+      - "3000:3000"
+
+  bot-ui:
+    build: ./services/bot-ui
+    ports:
+      - "3001:3001"
+
+volumes:
+  supabase-data:

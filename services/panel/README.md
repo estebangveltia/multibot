@@ -1,0 +1,1 @@
+# Panel Admin (Next.js)

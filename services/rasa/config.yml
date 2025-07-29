@@ -1,0 +1,9 @@
+language: es
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
+  - name: DIETClassifier
+  - name: EntitySynonymMapper
+  - name: ResponseSelector
+  - name: FallbackClassifier
