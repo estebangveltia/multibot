@@ -18,19 +18,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   const login = async (email: string, password: string) => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error || !data) {
-      return { success: false, message: 'Usuario no encontrado' };
+    if (error || !user) {
+      return {
+        success: false,
+        message: error?.message || 'Credenciales incorrectas',
+      };
     }
 
-    // Simular validación de contraseña (NO USAR EN PRODUCCIÓN)
-    if (data.password !== password) {
-      return { success: false, message: 'Contraseña incorrecta' };
+    const { data, error: profileError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError || !data) {
+      return { success: false, message: 'Usuario no encontrado' };
     }
 
     setUser(data);
@@ -38,7 +45,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: true, message: 'Login exitoso' };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     router.push('/login');
   };
