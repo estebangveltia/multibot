@@ -1,9 +1,0 @@
-node_modules
-.next
-
-# Ignore environment files
-.env*
-!.env.example
-
-# Ignore zip archives
-*.zip
