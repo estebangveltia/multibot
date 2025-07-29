@@ -126,7 +126,7 @@ npm install js-cookie
 
 ### 3. Configurar variables de entorno
 
-Crea un archivo `.env.local`:
+Copia el archivo `.env.example` a `.env.local` y completa los valores:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://<tu-proyecto>.supabase.co
