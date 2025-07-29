@@ -1,0 +1,8 @@
+# Placeholder compose for the bot UI
+version: '3'
+services:
+  bot-ui:
+    image: node:18
+    command: yarn dev
+    env_file:
+      - .env.example

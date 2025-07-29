@@ -1,0 +1,9 @@
+# Placeholder compose for Rasa
+version: '3'
+services:
+  rasa:
+    image: rasa/rasa:latest
+    volumes:
+      - ./:/app
+    env_file:
+      - .env.example

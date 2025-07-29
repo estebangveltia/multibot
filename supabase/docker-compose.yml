@@ -1,0 +1,7 @@
+# Placeholder compose for Supabase
+version: '3'
+services:
+  supabase:
+    image: supabase/local
+    env_file:
+      - .env.example
