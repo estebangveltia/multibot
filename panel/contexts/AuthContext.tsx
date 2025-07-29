@@ -7,6 +7,7 @@ import { Usuario } from '@/types/auth';
 
 type AuthContextType = {
   user: Usuario | null;
+  role: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
 };
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const router = useRouter();
 
   const login = async (email: string, password: string) => {
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(data);
+    setRole(data.role);
     router.push('/dashboard');
     return { success: true, message: 'Login exitoso' };
   };
@@ -48,11 +51,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    setRole(null);
     router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
